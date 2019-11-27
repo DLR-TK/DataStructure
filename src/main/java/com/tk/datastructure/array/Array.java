@@ -97,6 +97,14 @@ public class Array<E> {
         return data[index];
     }
 
+    public E getFirst() {
+        return get(0);
+    }
+
+    public E getLast() {
+        return get(size - 1);
+    }
+
     /**
      * 修改索引为index的元素为e
      * @param index 索引
