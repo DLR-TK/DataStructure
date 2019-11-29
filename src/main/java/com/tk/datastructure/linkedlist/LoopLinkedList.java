@@ -1,13 +1,15 @@
 package com.tk.datastructure.linkedlist;
 
 @SuppressWarnings("all")
-public class LinkedList<E> {
+public class LoopLinkedList<E> {
 
     private Node dummyHead;
     private int size;
 
-    public LinkedList() {
-        dummyHead = new Node(null, null);
+    public LoopLinkedList() {
+        dummyHead = new Node(null, null, null);
+        dummyHead.next = dummyHead;
+        dummyHead.prev = dummyHead;
         size = 0;
     }
 
@@ -37,10 +39,17 @@ public class LinkedList<E> {
         for (int i = 0; i < index ; i++) {
             prev = prev.next;
         }
-//        Node node = new Node(e);
-//        node.next = prev.next;
-//        prev.next = node;
-        prev.next = new Node(e, prev.next);
+
+        Node next = prev.next;
+
+        Node node = new Node(e);
+        node.next = prev.next;
+        prev.next = node;
+
+        next.prev = node;
+        node.prev = prev;
+
+
         size++;
     }
 
@@ -48,14 +57,30 @@ public class LinkedList<E> {
      * 向链表头部插入节点
      */
     public void addFirst(E e) {
-        add(0, e);
+
+        Node next = dummyHead.next;
+        Node node = new Node(e);
+        node.next = dummyHead.next;
+        dummyHead.next = node;
+
+        next.prev = node;
+        node.prev = dummyHead;
+        size++;
     }
 
     /**
      * 向链表尾部插入节点
      */
     public void addLast(E e) {
-        add(size, e);
+
+        Node cur = dummyHead.prev;
+        Node node = new Node(e);
+        node.prev = cur;
+        dummyHead.prev = node;
+
+        cur.next = node;
+        node.next = dummyHead;
+        size++;
     }
 
     /**
@@ -77,14 +102,14 @@ public class LinkedList<E> {
      * 获得链表的第一个元素
      */
     public E getFirst() {
-        return get(0);
+        return dummyHead.next.e;
     }
 
     /**
      * 获得链表的最后一个元素
      */
     public E getLast() {
-        return get(size - 1);
+        return dummyHead.prev.e;
     }
 
     /**
@@ -117,24 +142,6 @@ public class LinkedList<E> {
         return false;
     }
 
-    @Override
-    public String toString() {
-
-        StringBuilder res = new StringBuilder();
-
-//        Node cur = dummyHead.next;
-//        while (cur != null) {
-//            res.append(cur.e + "->");
-//            cur = cur.next;
-//        }
-        for (Node cur = dummyHead.next; cur != null; cur = cur.next) {
-            res.append(cur.e + "->");
-        }
-        res.append("NULL");
-
-        return res.toString();
-    }
-
     /**
      * 从链表中删除第index位置元素 返回删除元素（练习）
      */
@@ -150,45 +157,102 @@ public class LinkedList<E> {
 
         Node retNode = prev.next;
         prev.next = retNode.next;
+        retNode.next.prev = prev;
         retNode.next = null;
+        retNode.prev = null;
         size--;
         return retNode.e;
     }
 
     /**
-     * 从链表中删除第一个元素 返回删除元素（练习）
+     * 从链表中删除第一个元素 返回删除元素
      */
     public E removeFirst() {
-        return remove(0);
+
+        if (isEmpty())
+            throw new IllegalArgumentException("Remove failed. LoopLinkedList is empty.");
+
+        Node delNode = dummyHead.next;
+        dummyHead.next = delNode.next;
+        delNode.next.prev = dummyHead;
+        delNode.next = null;
+        delNode.prev = null;
+        return delNode.e;
     }
 
     /**
-     * 从链表中删除最后一个元素 返回删除元素（练习）
+     * 从链表中删除最后一个元素 返回删除元素
      */
     public E removeLast() {
-        return remove(size - 1);
+
+        if (isEmpty())
+            throw new IllegalArgumentException("Remove failed. LoopLinkedList is empty.");
+
+        Node delNode = dummyHead.prev;
+        dummyHead.prev = delNode.prev;
+        delNode.prev.next = dummyHead;
+        delNode.next = null;
+        delNode.prev = null;
+        return delNode.e;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder res = new StringBuilder();
+
+        Node cur = dummyHead.next;
+        while (cur != dummyHead) {
+            res.append(cur.e + "->");
+            cur = cur.next;
+        }
+        res.append("NULL");
+
+        return res.toString();
     }
 
     private class Node {
         public E e;
-        public Node next;
+        public Node next, prev;
 
-        public Node(E e, Node next) {
+        public Node(E e, Node next, Node prev) {
             this.e = e;
             this.next = next;
+            this.prev = prev;
         }
 
         public Node(E e) {
-            this(e, null);
+            this(e, null, null);
         }
 
         public Node() {
-            this(null, null);
+            this(null, null, null);
         }
 
         @Override
         public String toString() {
             return e.toString();
         }
+    }
+
+    public static void main(String[] args) {
+
+        LoopLinkedList<Integer> loopLinkedList = new LoopLinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            loopLinkedList.addFirst(i);
+            System.out.println(loopLinkedList);
+        }
+
+        loopLinkedList.add(2, 666);
+        System.out.println(loopLinkedList);
+
+        loopLinkedList.remove(2);
+        System.out.println(loopLinkedList);
+
+        loopLinkedList.removeFirst();
+        System.out.println(loopLinkedList);
+
+        loopLinkedList.removeLast();
+        System.out.println(loopLinkedList);
     }
 }

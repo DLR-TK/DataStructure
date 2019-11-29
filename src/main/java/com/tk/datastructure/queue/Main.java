@@ -1,7 +1,5 @@
 package com.tk.datastructure.queue;
 
-import com.tk.datastructure.linkedlist.LinkedList;
-
 import java.util.Random;
 
 public class Main {
