@@ -182,7 +182,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
             return null;
         }
 
-        if (key.compareTo(node.key) == 0) {
+        if (key.equals(node.key)) {
             return node;
         } else if (key.compareTo(node.key) < 0) {
             return getNode(node.left, key);

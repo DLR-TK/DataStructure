@@ -47,14 +47,20 @@ public class Main {
 
         String filename = "pride-and-prejudice.txt";
 
-        BSTMap<String, Integer> bstSet = new BSTMap<>();
-        double time1 = testMap(bstSet, filename);
-        System.out.println("BSTSet: " + time1 + " s");
+        BSTMap<String, Integer> bstMap = new BSTMap<>();
+        double time1 = testMap(bstMap, filename);
+        System.out.println("BSTMap: " + time1 + " s");
 
         System.out.println();
 
-        LinkedListMap<String, Integer> linkedListSet = new LinkedListMap<>();
-        double time2 = testMap(linkedListSet, filename);
-        System.out.println("LinkedListSet: " + time2 + " s");
+        LinkedListMap<String, Integer> linkedListMap = new LinkedListMap<>();
+        double time2 = testMap(linkedListMap, filename);
+        System.out.println("LinkedListMap: " + time2 + " s");
+
+        System.out.println();
+
+        AVLMap<String, Integer> avlMap = new AVLMap<>();
+        double time3 = testMap(avlMap, filename);
+        System.out.println("AVLMap: " + time3 + " s");
     }
 }
